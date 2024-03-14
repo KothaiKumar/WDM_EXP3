@@ -36,6 +36,7 @@ for each wear category.</p>
 <p align="justify">
 8. Visulaize the sequence patterns using matplotlib.
 </p>
+
 ### Program:
 
 ```python
@@ -43,16 +44,35 @@ from collections import defaultdict
 from itertools import combinations
 # Function to generate candidate k-item sequences
 def generate_candidates(dataset, k):
+ candidate_count = defaultdict(int)
 
+    for sequence in dataset:
+        for itemset in combinations(sequence, k):
+            candidate_count[itemset] += 1
 
-    /WRITE YOUR CODE HERE/
-
+    return candidate_count
 
 #Function to perform GSP algorithm
 def gsp(dataset, min_support):
+    # Step 1: Initialize the frequent patterns dictionary
+    frequent_patterns = defaultdict(int)
 
+    # Step 2: Generate frequent 1-item sequences
+    k = 1
+    candidate_count = generate_candidates(dataset, k)
 
-  /WRITE YOUR CODE HERE/
+    # Step 3: Prune and update frequent patterns
+    frequent_patterns.update({itemset: count for itemset, count in candidate_count.items() if count >= min_support})
+
+    # Step 4: Generate frequent k-item sequences until no more can be generated
+    while candidate_count:
+        k += 1
+        candidate_count = generate_candidates(dataset, k)
+
+        # Prune and update frequent patterns
+        frequent_patterns.update({itemset: count for itemset, count in candidate_count.items() if count >= min_support})
+
+    return frequent_patterns
 
 
 #Example dataset for each category
@@ -102,6 +122,7 @@ else:
  print("No frequent sequential patterns found in Party Wear.")
 ```
 ### Output:
+![image](https://github.com/KothaiKumar/WDM_EXP3/assets/121215739/f7665fc9-21b3-4ab6-8a3d-87a9a76f0fa3)
 
 ### Visualization:
 ```python
@@ -130,6 +151,10 @@ visualize_patterns_line(bottom_wear_result, 'Bottom Wear')
 visualize_patterns_line(party_wear_result, 'Party Wear')
 ```
 ### Output:
+![image](https://github.com/KothaiKumar/WDM_EXP3/assets/121215739/11583f5e-b93b-444b-b6e0-23fbcf52dd95)
+
+![image](https://github.com/KothaiKumar/WDM_EXP3/assets/121215739/701d7c7e-8181-4a3e-bc6c-7b83b20dd02d)
 
 
 ### Result:
+Thus, the implementation of the GSP algorithm in Python has been successfully executed.
